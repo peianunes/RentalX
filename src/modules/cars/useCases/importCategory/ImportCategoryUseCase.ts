@@ -1,12 +1,14 @@
+/* eslint-disable max-classes-per-file */
 import { parse } from "csv-parse";
 import fs from "fs";
 
 import { ICategoriesRepository } from "../../repositories/ICategoriesRepository";
 
-class IImportCategory {
+interface IImportCategory {
   name: string;
   description: string;
 }
+
 class ImportCategoryUseCase {
   constructor(private categoriesRepository: ICategoriesRepository) {}
 
@@ -26,8 +28,9 @@ class ImportCategoryUseCase {
             name,
             description,
           });
-        });
+        })
         .on("end", () => {
+          fs.promises.unlink(file.path);
           resolve(categories);
         })
         .on("error", (err) => {
@@ -37,7 +40,19 @@ class ImportCategoryUseCase {
   }
   async execute(file: Express.Multer.File): Promise<void> {
     const categories = await this.loadCategories(file);
-    console.log(categories);
+
+    // eslint-disable-next-line array-callback-return
+    categories.map(async (category) => {
+      const { name, description } = category;
+      const existCategory = this.categoriesRepository.findByName(name);
+
+      if (!existCategory) {
+        this.categoriesRepository.create({
+          name,
+          description,
+        });
+      }
+    });
   }
 }
 
