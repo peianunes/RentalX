@@ -12,24 +12,23 @@ class UsersRepository implements IUsersRepository {
 
   async create({
     name,
-    username,
     email,
     password,
     drive_license,
   }: ICreateUserDTO): Promise<void> {
     const user = await this.repository.create({
       name,
-      username,
       email,
       password,
       drive_license,
     });
     await this.repository.save(user);
   }
-  // async findByUsername({ username }: ICreateUserDTO): Promise<Users> {
-  //  const user = await this.repository.find(username);
+  async findByEmail(email: ICreateUserDTO): Promise<Users> {
+    const user = await this.repository.findOne(email);
 
-  //  return user;
+    return user;
+  }
 }
 
 export { UsersRepository };
