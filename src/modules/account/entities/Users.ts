@@ -5,16 +5,25 @@ import { v4 as uuidv4 } from "uuid";
 class Users {
   @PrimaryColumn()
   id: string;
+
   @Column()
   name: string;
+
   @Column()
   password: string;
+
   @Column()
   email: string;
+
   @Column()
   drive_license: string;
+
   @Column()
   isAdmin: boolean;
+
+  @Column()
+  avatar: string;
+
   @CreateDateColumn()
   created_at: Date;
 
