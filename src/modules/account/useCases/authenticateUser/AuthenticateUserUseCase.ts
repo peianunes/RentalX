@@ -2,6 +2,7 @@ import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 
+import { AppError } from "../../../../erros/AppError";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 
 interface IRequest {
@@ -29,12 +30,12 @@ class AuthenticateUserUseCase {
     });
 
     if (!user) {
-      throw new Error("User or password incorrect");
+      throw new AppError("User or password incorrect");
     }
     // Senha esta correta?
     const passwordMatch = await compare(password, user.password);
     if (!passwordMatch) {
-      throw new Error("User or password incorrect");
+      throw new AppError("User or password incorrect");
     }
     // Gerar token
     const token = sign({}, "peianunes0123", {
