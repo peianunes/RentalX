@@ -5,8 +5,8 @@ import { UpdateUserAvatarUseCase } from "./UpdateAvatarUserUseCase";
 
 class UpdateAvatarUserController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { id } = request.user;
-    const avatar_file = request.file.filename;
+    const { id } = request.user; // from ensureAuthenticated middleware
+    const avatar_file = request.file.filename; // from uploadConfig middleware
 
     const updateUserAvatarUseCase = container.resolve(UpdateUserAvatarUseCase);
 
