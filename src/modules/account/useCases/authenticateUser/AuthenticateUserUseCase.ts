@@ -2,8 +2,8 @@ import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 
-import { AppError } from "../../../../erros/AppError";
-import { IUsersRepository } from "../../repositories/IUsersRepository";
+import { IUsersRepository } from "@modules/account/repositories/IUsersRepository";
+import { AppError } from "@shared/errors/AppError";
 
 interface IRequest {
   email: string;
@@ -25,9 +25,7 @@ class AuthenticateUserUseCase {
 
   async execute({ email, password }: IRequest): Promise<IResponse> {
     // Usuario existe?
-    const user = await this.usersRepository.findByEmail({ email } as {
-      email: string;
-    });
+    const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
       throw new AppError("User or password incorrect");
